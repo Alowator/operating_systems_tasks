@@ -8,13 +8,13 @@
 #include <signal.h> 
 
 char buf[BUFSIZ];
-int fd;
+int fd, tfd;
 
 void print_file_and_exit(int signo) {
     lseek(fd, SEEK_SET, 0);
     int i;
     while ((i = read(fd, buf, BUFSIZ)) > 0)
-        write(1, buf, i);
+        write(tfd, buf, i);
     exit(0);
 }
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     int length = 0, line_number;
     char c;
 
-    int tfd = open("/dev/tty", O_RDONLY);
+    tfd = open("/dev/tty", O_RDWR);
     if (tfd == -1) {
         fprintf(stderr, "Cant open /dev/tty\n");
         return 1;
@@ -55,14 +55,14 @@ int main(int argc, char *argv[])
         printf("Enter line number:\n");
         alarm(5);
         i = read(tfd, buf, BUFSIZ);
-
+        
         buf[i] = '\0';
         line_number = atoi(buf);
         if (line_number <= 0)
             return 0;
         lseek(fd, offsets[line_number], 0);
         if (read(fd, buf, lengths[line_number]))
-            write(1, buf, lengths[line_number]);
+            write(tfd, buf, lengths[line_number]);
         else
             fprintf(stderr, "Incorrect line number\n");
     }

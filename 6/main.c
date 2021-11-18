@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     int length = 0, line_number;
     char c, buf[BUFSIZ];
 
-    int tfd = open("/dev/tty", O_RDONLY | O_NDELAY);
+    int tfd = open("/dev/tty", O_RDWR | O_NDELAY);
     if (tfd == -1) {
         fprintf(stderr, "Cant open /dev/tty\n");
         return 1;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
         if (i <= 0) {
             lseek(fd, SEEK_SET, 0);
             while((i = read(fd, buf, BUFSIZ)) > 0)
-                write(1, buf, i);
+                write(tfd, buf, i);
             return 0;
         } else {
             buf[i] = '\0';
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
                 return 0;
             lseek(fd, offsets[line_number], 0);
             if (read(fd, buf, lengths[line_number]))
-                write(1, buf, lengths[line_number]);
+                write(tfd, buf, lengths[line_number]);
             else
                 fprintf(stderr, "Incorrect line number\n");
         }
