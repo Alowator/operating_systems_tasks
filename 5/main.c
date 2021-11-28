@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
         if (c == '\n') {
             length++;
             lengths[i++] = length;
-            offsets[i] = lseek(fd, 0, 1);
+            offsets[i] = lseek(fd, 0, SEEK_CUR);
             length = 0;
         } else {
             length++;
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         if (line_number == 0)
             return 0;
 
-        lseek(fd, offsets[line_number], 0);
+        lseek(fd, offsets[line_number], SEEK_SET);
         if (read(fd, buf, lengths[line_number]))
             write(1, buf, lengths[line_number]);
         else

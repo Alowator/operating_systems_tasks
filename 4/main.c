@@ -37,7 +37,7 @@ int main() {
     while(sentinel->next != NULL) {
         puts(sentinel->next->data);
         tail = sentinel->next;
-        if (sentinel->data != NULL)
+	if (sentinel->data != NULL)
             free(sentinel->data);
         free(sentinel);
         sentinel = tail;
