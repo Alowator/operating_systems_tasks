@@ -6,7 +6,6 @@
 
 int main(int argc, char **argv) {
     int fd[2];
-    char *str = "I don't like Capslock\n";
     
     int pipe_status = pipe(fd);
     if (pipe_status == -1) {
@@ -14,6 +13,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    char *str = "I don't like Capslock\n";
     int pid = fork();
     if (pid > 0) {
         close(fd[0]);
